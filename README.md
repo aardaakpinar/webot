@@ -1,0 +1,1 @@
+https://github.com/wecordy/wecordy.js için dökümantasyon / wiki gelince daha da özellikler gelecektir. Basit bir bot denemesidir.

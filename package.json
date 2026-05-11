@@ -1,0 +1,28 @@
+{
+  "name": "wecordy-mod-bot",
+  "version": "1.0.0",
+  "description": "Wecordy.js moderasyon botu",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "node src/index.ts",
+    "start": "node dist/index.js",
+    "watch": "tsc --watch"
+  },
+  "keywords": [
+    "wecordy",
+    "moderation",
+    "bot"
+  ],
+  "author": "aardaakpinar",
+  "license": "MIT",
+  "dependencies": {
+    "@wecordy/core": "^1.0.6",
+    "dotenv": "^17.4.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}
