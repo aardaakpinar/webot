@@ -1,7 +1,15 @@
+export interface FAQKeyword {
+  text: string;
+  weight?: number;
+  synonyms?: string[];
+}
+
+export type FAQKeywordEntry = string | FAQKeyword;
+
 export interface FAQItem {
   id: string;
   answer: string;
-  keywords: string[];
+  keywords: FAQKeywordEntry[];
   createdBy: string;
   createdAt: number;
 }

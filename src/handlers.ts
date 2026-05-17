@@ -75,11 +75,8 @@ export async function handleMessage(message: Message): Promise<void> {
   const serverData = loadServerData(serverId, message.server?.name);
   const content = message.content ?? '';
 
-  const isQuestion = /\?/.test(content) || /^\s*(nasıl|ne|neden|nerede|hangi|kim|kaç|niçin)\b/i.test(content);
-  if (!isQuestion) return;
-
   const query = content.trim();
-  if (!query) return;
+  if (!query || !query.includes('?')) return;
 
   const result = findBestMatchWithScore(query, serverData);
   const match = result.faq;
@@ -88,7 +85,6 @@ export async function handleMessage(message: Message): Promise<void> {
   console.log(`[${message.server?.name ?? 'Unknown'}] FAQ match score: ${(score * 100).toFixed(1)}% for query: ${query}`);
 
   if (!match || score < 0.3) {
-    await message.reply('No matching answer was found. Try different tags or ask an admin to add one.');
     return;
   }
 
@@ -114,7 +110,7 @@ async function handleAskFaq(interaction: CommandInteraction, serverData: ServerD
   const match = result.faq;
   const score = result.score;
 
-  console.log(`[${interaction.server?.name ?? 'Unknown'}] FAQ match score: ${(score * 100).toFixed(1)}% for query: ${question}`);
+  console.log(`[${interaction.server?.name ?? '/list-faqs'}] FAQ match score: ${(score * 100).toFixed(1)}% for query: ${question}`);
 
   if (!match || score < 0.3) {
     await interaction.reply('No matching answer was found. Try different tags or ask an admin to add one.');
