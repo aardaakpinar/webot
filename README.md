@@ -7,7 +7,7 @@ Bir `wecordy.js` tabanlı moderation bot örneğidir. Bot, sunucuda saklanan SSS
 - `?` veya Türkçe soru kelimeleri ile başlayan mesajlarda otomatik arama yapar.
 - En iyi eşleşmeyi bulup cevabı gönderir.
 - Eşleşme yüzdesini konsola yazdırır.
-- Sunucu başına ayrı veri dosyası (`server-data/<serverId>.json`) ile FAQ kaydeder.
+- Sunucu başına ayrı veri dosyası (`data/<serverId>.json`) ile FAQ kaydeder.
 - Aşağıdaki slash komutları destekler:
   - `/ask` — soru sorup en iyi SSS yanıtını alır.
   - `/add-faq` — yeni SSS cevabı ekler.
@@ -70,7 +70,7 @@ npm run watch
 
 ## Veri Depolama
 
-Sunucu bazlı veriler `server-data` klasörüne JSON olarak kaydedilir.
+Sunucu bazlı veriler `data` klasörüne JSON olarak kaydedilir.
 
 ## Kaynak Dosyalar
 

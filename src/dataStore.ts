@@ -1,7 +1,7 @@
 import fs from 'fs';
 import type { ServerData } from './types.js';
 
-const DATA_DIR = './server-data';
+const DATA_DIR = './data';
 
 function getServerDataPath(serverId: string): string {
   if (!fs.existsSync(DATA_DIR)) {
