@@ -4,7 +4,7 @@ Bir `wecordy.js` tabanlı moderation bot örneğidir. Bot, sunucuda saklanan SSS
 
 ## Özellikler
 
-- `?` veya Türkçe soru kelimeleri ile başlayan mesajlarda otomatik arama yapar.
+- `?` mesajlarda otomatik arama yapar.
 - En iyi eşleşmeyi bulup cevabı gönderir.
 - Gelişmiş SSS eşleştirmesi: çok kelimeli anahtar kelime desteği, eşanlamlı haritalama, ifade önceliği, ağırlıklı anahtar kelimeler ve yazım hatalarına karşı tolerans.
 - Eşleşme yüzdesini konsola yazdırır.
