@@ -3,7 +3,13 @@ import { saveServerData } from './dataStore.js';
 import type { ServerData } from './types.js';
 
 export function isAdmin(userId: string, serverData: ServerData): boolean {
-  return serverData.admins.includes(userId);
+  const normalizedUserId = userId.trim();
+  return serverData.admins.some(admin => String(admin).trim() === normalizedUserId);
+}
+
+export function isAdminByUsername(username: string, serverData: ServerData): boolean {
+  const normalizedUsername = username.trim().toLowerCase();
+  return serverData.admins.some(admin => String(admin).trim().toLowerCase() === normalizedUsername);
 }
 
 export async function checkServerOwner(

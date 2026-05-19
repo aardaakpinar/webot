@@ -2,7 +2,7 @@ import type { Client, CommandInteraction, Message } from '@wecordy/core';
 import { ADMIN_COMMAND_NAMES, COMMANDS } from './commands.js';
 import { loadServerData, saveServerData } from './dataStore.js';
 import { findBestMatchWithScore, generateId } from './faq.js';
-import { checkServerOwner, isAdmin } from './permissions.js';
+import { checkServerOwner, isAdmin, isAdminByUsername } from './permissions.js';
 import type { FAQItem, ServerData } from './types.js';
 
 export async function handleInteraction(client: Client, interaction: CommandInteraction): Promise<void> {
@@ -32,7 +32,12 @@ export async function handleInteraction(client: Client, interaction: CommandInte
     return;
   }
 
-  if (ADMIN_COMMAND_NAMES.has(commandName) && !isOwner && !isAdmin(userId, serverData)) {
+  if (
+    ADMIN_COMMAND_NAMES.has(commandName)
+    && !isOwner
+    && !isAdmin(userId, serverData)
+    && !isAdminByUsername(username, serverData)
+  ) {
     await interaction.reply('This command can only be used by FAQ admins or the server owner.');
     return;
   }
