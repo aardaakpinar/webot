@@ -73,15 +73,6 @@ npm run watch
 
 Sunucu bazlı veriler `data` klasörüne JSON olarak kaydedilir.
 
-## Kaynak Dosyalar
-
-- `src/index.ts` — botun ana giriş noktası.
-- `src/handlers.ts` — mesaj ve slash komutlarını işler.
-- `src/faq.ts` — metin normalizasyonu ve eşleşme algoritması.
-- `src/dataStore.ts` — sunucu verilerini dosyaya kaydeder.
-- `src/commands.ts` — slash komut tanımları.
-- `src/types.ts` — tip tanımları.
-
 ## Notlar
 
 Bot şu anda basit bir SSS sistemi olarak çalışır. `wecordy.js` için resmi dokümantasyon / wiki hazır olduğunda daha fazla özellik eklenebilir.
