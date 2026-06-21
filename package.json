@@ -18,7 +18,7 @@
   "author": "aardaakpinar",
   "license": "MIT",
   "dependencies": {
-    "@wecordy/core": "^1.0.7",
+    "@wecordy/core": "^1.0.9",
     "dotenv": "^17.4.2"
   },
   "devDependencies": {
