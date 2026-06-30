@@ -1,4 +1,9 @@
-import type { FAQItem, FAQKeywordEntry, FAQKeyword, ServerData } from './types.js';
+import type {
+  FAQItem,
+  FAQKeywordEntry,
+  FAQKeyword,
+  ServerData,
+} from "./types.js";
 
 const DEFAULT_KEYWORD_WEIGHT = 1;
 const PHRASE_BOOST = 0.18;
@@ -8,10 +13,10 @@ const MIN_SIMILARITY_SCORE = 0.3;
 export function normalizeText(text: string): string {
   return text
     .toLowerCase()
-    .replace(/\u0131/g, 'i')
-    .replace(/\u0130/g, 'i')
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\u0131/g, "i")
+    .replace(/\u0130/g, "i")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
     .trim();
 }
 
@@ -22,21 +27,25 @@ export function tokenize(text: string): string[] {
 }
 
 export function parseKeywordEntry(entry: FAQKeywordEntry): FAQKeyword {
-  if (typeof entry === 'string') {
+  if (typeof entry === "string") {
     const raw = entry.trim();
-    const [mainPart, metadata] = raw.split('~', 2).map(part => part.trim());
-    const [keywordText, weightPart] = mainPart.split('|', 2).map(part => part.trim());
+    const [mainPart, metadata] = raw.split("~", 2).map((part) => part.trim());
+    const [keywordText, weightPart] = mainPart
+      .split("|", 2)
+      .map((part) => part.trim());
 
     const keyword: FAQKeyword = {
       text: keywordText,
-      weight: weightPart ? Number(weightPart) || DEFAULT_KEYWORD_WEIGHT : DEFAULT_KEYWORD_WEIGHT,
-      synonyms: []
+      weight: weightPart
+        ? Number(weightPart) || DEFAULT_KEYWORD_WEIGHT
+        : DEFAULT_KEYWORD_WEIGHT,
+      synonyms: [],
     };
 
     if (metadata) {
       keyword.synonyms = metadata
-        .split(';')
-        .map(synonym => synonym.trim())
+        .split(";")
+        .map((synonym) => synonym.trim())
         .filter(Boolean);
     }
 
@@ -46,7 +55,7 @@ export function parseKeywordEntry(entry: FAQKeywordEntry): FAQKeyword {
   return {
     text: entry.text,
     weight: entry.weight ?? DEFAULT_KEYWORD_WEIGHT,
-    synonyms: entry.synonyms ? entry.synonyms.map(normalizeText) : []
+    synonyms: entry.synonyms ? entry.synonyms.map(normalizeText) : [],
   };
 }
 
@@ -79,7 +88,7 @@ function levenshteinDistance(a: string, b: string): number {
       matrix[i][j] = Math.min(
         matrix[i - 1][j] + 1,
         matrix[i][j - 1] + 1,
-        matrix[i - 1][j - 1] + cost
+        matrix[i - 1][j - 1] + cost,
       );
     }
   }
@@ -101,8 +110,8 @@ function getBestPhraseScore(query: string, keywordText: string): number {
   const queryTokens = tokenize(query);
   const keywordTokens = tokenize(normalizedKeyword);
 
-  const phrase = keywordTokens.join(' ');
-  const normalizedQuery = queryTokens.join(' ');
+  const phrase = keywordTokens.join(" ");
+  const normalizedQuery = queryTokens.join(" ");
 
   if (!phrase) {
     return 0;
@@ -115,7 +124,9 @@ function getBestPhraseScore(query: string, keywordText: string): number {
   if (keywordTokens.length > 1) {
     const slidingCandidates = [];
     for (let i = 0; i <= queryTokens.length - keywordTokens.length; i += 1) {
-      slidingCandidates.push(queryTokens.slice(i, i + keywordTokens.length).join(' '));
+      slidingCandidates.push(
+        queryTokens.slice(i, i + keywordTokens.length).join(" "),
+      );
     }
 
     const bestNgramScore = slidingCandidates.reduce((best, candidate) => {
@@ -125,10 +136,17 @@ function getBestPhraseScore(query: string, keywordText: string): number {
     return bestNgramScore;
   }
 
-  return Math.max(...queryTokens.map(token => fuzzyScore(normalizedKeyword, token)), 0);
+  return Math.max(
+    ...queryTokens.map((token) => fuzzyScore(normalizedKeyword, token)),
+    0,
+  );
 }
 
-function scoreKeywordMatch(query: string, keyword: FAQKeyword, synonymMap: Map<string, string[]>): number {
+function scoreKeywordMatch(
+  query: string,
+  keyword: FAQKeyword,
+  synonymMap: Map<string, string[]>,
+): number {
   const normalizedQuery = normalizeText(query);
   const normalizedKeyword = normalizeText(keyword.text);
   const keywordTokens = tokenize(normalizedKeyword);
@@ -144,21 +162,31 @@ function scoreKeywordMatch(query: string, keyword: FAQKeyword, synonymMap: Map<s
   }
 
   const phraseScore = getBestPhraseScore(normalizedQuery, normalizedKeyword);
-  const basePhraseScore = Math.min(phraseScore + (keywordTokens.length > 1 ? PHRASE_BOOST : 0), 1);
+  const basePhraseScore = Math.min(
+    phraseScore + (keywordTokens.length > 1 ? PHRASE_BOOST : 0),
+    1,
+  );
 
   const synonyms = synonymMap.get(normalizedKeyword) ?? keyword.synonyms ?? [];
-  const synonymMatch = synonyms.some(synonym => normalizedQuery.includes(synonym));
-  const synonymScore = synonymMatch ? Math.min(basePhraseScore + SYNONYM_BOOST, 1) : basePhraseScore;
+  const synonymMatch = synonyms.some((synonym) =>
+    normalizedQuery.includes(synonym),
+  );
+  const synonymScore = synonymMatch
+    ? Math.min(basePhraseScore + SYNONYM_BOOST, 1)
+    : basePhraseScore;
 
   const bestFuzzy = Math.max(
     fuzzyScore(normalizedKeyword, normalizedQuery),
-    ...queryTokens.map(token => fuzzyScore(normalizedKeyword, token))
+    ...queryTokens.map((token) => fuzzyScore(normalizedKeyword, token)),
   );
 
   return Math.max(synonymScore, bestFuzzy);
 }
 
-export function calculateSimilarity(text: string, keywords: FAQKeywordEntry[]): number {
+export function calculateSimilarity(
+  text: string,
+  keywords: FAQKeywordEntry[],
+): number {
   if (!keywords || keywords.length === 0) {
     return 0;
   }
@@ -178,12 +206,18 @@ export function calculateSimilarity(text: string, keywords: FAQKeywordEntry[]): 
   return totalWeight > 0 ? weightedScore / totalWeight : 0;
 }
 
-export function findBestMatch(query: string, serverData: ServerData): FAQItem | null {
+export function findBestMatch(
+  query: string,
+  serverData: ServerData,
+): FAQItem | null {
   const result = findBestMatchWithScore(query, serverData);
   return result.score >= MIN_SIMILARITY_SCORE ? result.faq : null;
 }
 
-export function findBestMatchWithScore(query: string, serverData: ServerData): { faq: FAQItem | null; score: number } {
+export function findBestMatchWithScore(
+  query: string,
+  serverData: ServerData,
+): { faq: FAQItem | null; score: number } {
   const faqList = Object.values(serverData.faqs);
   if (faqList.length === 0) return { faq: null, score: 0 };
 

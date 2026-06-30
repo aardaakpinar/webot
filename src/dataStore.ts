@@ -1,7 +1,7 @@
-import fs from 'fs';
-import type { ServerData } from './types.js';
+import fs from "fs";
+import type { ServerData } from "./types.js";
 
-const DATA_DIR = './data';
+const DATA_DIR = "./data";
 
 function getServerDataPath(serverId: string): string {
   if (!fs.existsSync(DATA_DIR)) {
@@ -11,7 +11,10 @@ function getServerDataPath(serverId: string): string {
   return `${DATA_DIR}/${serverId}.json`;
 }
 
-export function loadServerData(serverId: string, serverName = 'Unknown'): ServerData {
+export function loadServerData(
+  serverId: string,
+  serverName = "Unknown",
+): ServerData {
   const filePath = getServerDataPath(serverId);
 
   if (!fs.existsSync(filePath)) {
@@ -20,7 +23,7 @@ export function loadServerData(serverId: string, serverName = 'Unknown'): Server
       admins: [],
       serverName,
       serverId,
-      createdAt: Date.now()
+      createdAt: Date.now(),
     };
 
     saveServerData(serverId, newData);
@@ -28,7 +31,7 @@ export function loadServerData(serverId: string, serverName = 'Unknown'): Server
     return newData;
   }
 
-  return JSON.parse(fs.readFileSync(filePath, 'utf-8')) as ServerData;
+  return JSON.parse(fs.readFileSync(filePath, "utf-8")) as ServerData;
 }
 
 export function saveServerData(serverId: string, data: ServerData): void {
